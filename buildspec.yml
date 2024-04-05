@@ -1,0 +1,22 @@
+version: 0.2
+env:
+  variables:
+    SONAR_PROJECT_KEY: "x23200863cdos_sonar"
+    SONAR_ORGANIZATION: "x23200863cdos"
+    SONAR_HOST_URL: "https://sonarcloud.io"
+    SONAR_TOKEN: "ecf12a1ce3448f871d7d60dfc95d36f2a9ae43a2"
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - apt-get update
+      - apt-get install -y unzip
+      - curl -o /tmp/sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      - unzip /tmp/sonarscanner.zip -d /tmp
+      - mv /tmp/sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+      - ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/bin/sonar-scanner
+  build:
+    commands:
+      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.sources=. -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
